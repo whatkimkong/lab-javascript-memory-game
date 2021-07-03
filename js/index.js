@@ -1,3 +1,5 @@
+const MemoryGame = require("./memory");
+
 const cards = [
   { name: 'aquaman', img: 'aquaman.jpg' },
   { name: 'batman', img: 'batman.jpg' },
@@ -38,14 +40,34 @@ window.addEventListener('load', (event) => {
     `;
   });
 
-  // Add all the divs to the HTML
-  document.querySelector('#memory-board').innerHTML = html;
 
   // Bind the click event of each element to a function
+    // attempt with toggle
+    //attempt with .forEach
+
   document.querySelectorAll('.card').forEach((card) => {
-    card.addEventListener('click', () => {
-      // TODO: write some code here
+    card.addEventListener ('click', () => {
+      card.classList.toggle('turned');
+      
+      MemoryGame.pairsClicked ++;
+      MemoryGame.pickedCards.push(card); // adds a card to be later checked when 2 cards conditional met
+
+      if (MemoryGame.pickedCards.length === 2 && MemoryGame.checkIfPair() === true) {
+        MemoryGame.pairsGuessed ++; 
+        MemoryGame.pickedCards.pop() // so that pickedCards is always back to zero before next pair chosen
+        MemoryGame.pickedCards.pop()
+
+      } else if (MemoryGame.pickedCards.length === 2 && MemoryGame.checkIfPair() === false) {
+        card.classList.toggle('turned'); // to remove class turned and flip them back to normal
+        MemoryGame.pickedCards.pop() // so that pickedCards is always back to zero before next pair chosen
+        MemoryGame.pickedCards.pop()
+      }
+    
+      MemoryGame.checkIfFinished()
+      
       console.log(`Card clicked: ${card}`);
     });
   });
+
+
 });
